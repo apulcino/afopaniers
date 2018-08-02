@@ -7,6 +7,14 @@ const router = express.Router();
 const apiConnect = 'https://connect.afpforum.com:443/v0.9';
 
 //------------------------------------------------------------------------------
+// middleware that is specific to this router
+//------------------------------------------------------------------------------
+router.use((req, res, next) => {
+    console.log('Time: ', Date.now());
+    next();
+});
+
+//------------------------------------------------------------------------------
 // http://localhost:3002/api/selections
 //------------------------------------------------------------------------------
 router.get('/', (req, res) => {
@@ -41,10 +49,10 @@ router.get('/:selectionId/page/:page', (req, res) => {
 // https://connect.afpforum.com:443/v0.9/api/selections/d4f23f5d-69fc-4d29-84d7-053ac10c16af?auth=10C5...BBAE
 //------------------------------------------------------------------------------
 function getApiSelectionPage(auth, selId, page) {
-    const url = apiConnect + '/api/selections/'+ selId + '/page/' + page +'?auth=' + auth;
+    const url = apiConnect + '/api/selections/' + selId + '/page/' + page + '?auth=' + auth;
     console.log('GET : ', url);
     return new Promise(function (resolve, reject) {
-        fetch( url, {
+        fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -52,7 +60,7 @@ function getApiSelectionPage(auth, selId, page) {
             },
         }).then(response => {
             return response.json();
-        }).then(function(json){
+        }).then(function (json) {
             delete json.DebugInfo;
             resolve(json.Data);
         }).catch(err => {
@@ -65,10 +73,10 @@ function getApiSelectionPage(auth, selId, page) {
 // https://connect.afpforum.com:443/v0.9/api/selections/d4f23f5d-69fc-4d29-84d7-053ac10c16af?auth=10C5...BBAE
 //------------------------------------------------------------------------------
 function getApiSelection(auth, selId) {
-    const url = apiConnect + '/api/selections/'+ selId + '?auth=' + auth;
+    const url = apiConnect + '/api/selections/' + selId + '?auth=' + auth;
     console.log('GET : ', url);
     return new Promise(function (resolve, reject) {
-        fetch( url, {
+        fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -76,7 +84,7 @@ function getApiSelection(auth, selId) {
             },
         }).then(response => {
             return response.json();
-        }).then(function(json){
+        }).then(function (json) {
             delete json.DebugInfo;
             resolve(json.Data);
         }).catch(err => {
@@ -92,7 +100,7 @@ function getApiSelections(auth) {
     const url = apiConnect + '/api/selections?auth=' + auth;
     console.log('GET : ', url);
     return new Promise(function (resolve, reject) {
-        fetch( url, {
+        fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -100,7 +108,7 @@ function getApiSelections(auth) {
             },
         }).then(response => {
             return response.json();
-        }).then(function(json){
+        }).then(function (json) {
             delete json.DebugInfo;
             resolve(json.Data);
         }).catch(err => {
