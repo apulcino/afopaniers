@@ -1,10 +1,11 @@
+const constantes = require('../library/constantes');
 const express = require('express');
 const application = express();
 
 const apiSelectionsRoutes = require('./APISelections');
-application.use('/api/selections', apiSelectionsRoutes);
+application.use(constantes.MSPathnameEnum.afoPaniers, apiSelectionsRoutes);
 
 const apiHealthRoutes = require('./APIHealth');
-application.use('/health', apiHealthRoutes);
+application.use(constantes.MSPathnameEnum.afoHealth, apiHealthRoutes);
 
 module.exports = application;
