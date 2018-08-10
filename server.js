@@ -3,6 +3,8 @@ const application = require('./application');
 const constantes = require('../library/constantes');
 const multicastRecver = require('../library/multicastRecver');
 const regsitryMgr = require('../library/registryMgr');
+const traceMgr = new (require('../library/tracemgr'))('AFOPaniers');
+
 const port = process.env.PORT || 0;
 
 let AFORegisteryUrl = [];
@@ -14,19 +16,18 @@ server.listen(port, function () {
   var intervalObj = setInterval(() => {
     let AFORegisteryUrl = regMgr.getList();
     if (0 !== AFORegisteryUrl.length) {
-      constantes.declareService('SelectionsSrv', AFORegisteryUrl, constantes.MSTypeEnum.afoPaniers, host, port, constantes.MSPathnameEnum.afoPaniers);
+      constantes.declareService(traceMgr, AFORegisteryUrl, constantes.MSTypeEnum.afoPaniers, host, port, constantes.MSPathnameEnum.afoPaniers);
     }
   }, 10000);
-  console.log("SelectionsSrv listening at http://%s:%s", host, port)
+  traceMgr.info("listening at http://%s:%s", host, port)
 });
 
-const regMgr = new regsitryMgr();
+const regMgr = new regsitryMgr(traceMgr);
 const mcRecver = new multicastRecver(constantes.getServerIpAddress(), constantes.MCastAppPort, constantes.MCastAppAddr, (address, port, message) => {
-  console.log('SelectionsSrv : Recv Msg From : ' + address + ':' + port + ' - ' + JSON.stringify(message));
+  traceMgr.debug('Recv Msg From : ' + address + ':' + port + ' - ' + JSON.stringify(message));
   if (message.type === constantes.MSMessageTypeEnum.regAnnonce) {
     regMgr.add(message.host, message.port);
   }
 });
 
-console.log('SelectionsSrv RESTful API server started on: ' + port);
 
