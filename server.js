@@ -24,7 +24,7 @@ server.listen(port, function () {
 });
 
 const regMgr = new regsitryMgr(traceMgr);
-const mcRecver = new multicastRecver(constantes.getServerIpAddress(), constantes.MCastAppPort, constantes.MCastAppAddr, (address, port, message) => {
+const mcRecver = new multicastRecver(constantes.getServerIpAddress(), constantes.MCastAppPort, constantes.MCastAppAddr, constantes.getServerPublicIpAddress(), (address, port, message) => {
   traceMgr.debug('Recv Msg From : ' + address + ':' + port + ' - ' + JSON.stringify(message));
   if (message.type === constantes.MSMessageTypeEnum.regAnnonce) {
     regMgr.add(message.host, message.port);
